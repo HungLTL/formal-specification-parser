@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace FormalSpecificationParser
 {
@@ -70,6 +72,7 @@ namespace FormalSpecificationParser
             output += "\t" + args[args.Count() - 1].getName() + " = " + func.getName() + "("
                 + ParseString.ArgListWithoutDatatype(args) + ";\n";
             output += "\tcout << \"Result: \" << " + args[args.Count() - 1].getName() + ";\n";
+            output += "\tsystem(\"pause\");\n";
             output += "\treturn 0;\n}";
 
             return output;
@@ -240,6 +243,24 @@ namespace FormalSpecificationParser
             txtOutput.SelectionColor = originalColor;
 
             txtInput.Focus();
+        }
+
+        private void toolStripButtonRun_Click(object sender, EventArgs e)
+        {
+            if (File.Exists("output.exe"))
+                File.Delete("output.exe");
+
+            File.WriteAllText("output.cpp", txtOutput.Text);
+
+            string gccPath = @"C:\Program Files\mingw-w64\x86_64-8.1.0-win32-seh-rt_v6-rev0\mingw64\bin\g++.exe";
+            string args = "-std=c++11 output.cpp -o output.exe"; // Example of arguments
+            ProcessStartInfo gccStartInfo = new ProcessStartInfo(gccPath, args);
+            Process.Start(gccStartInfo);
+
+            Thread.Sleep(3000);
+
+            Process.Start("output.exe");
+            File.Delete("output.cpp");
         }
     }
 }
