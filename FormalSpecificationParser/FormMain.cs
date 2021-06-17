@@ -253,11 +253,11 @@ namespace FormalSpecificationParser
             File.WriteAllText("output.cpp", txtOutput.Text);
 
             string gccPath = @"C:\Program Files\mingw-w64\x86_64-8.1.0-win32-seh-rt_v6-rev0\mingw64\bin\g++.exe";
-            string args = "-std=c++11 output.cpp -o output.exe"; // Example of arguments
+            string args = "-std=c++11 output.cpp -o output.exe";
             ProcessStartInfo gccStartInfo = new ProcessStartInfo(gccPath, args);
             Process.Start(gccStartInfo);
 
-            Thread.Sleep(3000);
+            Thread.Sleep(5000);
 
             Process.Start("output.exe");
             File.Delete("output.cpp");
